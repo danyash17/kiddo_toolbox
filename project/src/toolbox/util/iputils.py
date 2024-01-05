@@ -86,9 +86,28 @@ def get_multiple_ip_list(str_multiple):
     '''
     return str_multiple.strip().split(',')
 
-
 def get_subnet_ip_list(str_subnet):
     '''
-            Get IP list from subnet string representation (ex. "192.168.0.1, 192.168.0.3" ->
-            [192.168.0.1", "192.168.0.3"])
+       Get IP list from subnet string representation (ex. "192.168.0.1/24" ->
+       [192.168.0.1", "192.168.0.2", ... , "192.168.0.255"])
     '''
+    # Parse the subnet string
+    ip_str, mask_str = str_subnet.split('/')
+    ip_parts = list(map(int, ip_str.split('.')))
+    mask_bits = int(mask_str)
+
+    # Calculate the subnet mask
+    mask = 0xffffffff << (32 - mask_bits)
+    mask_parts = [(mask >> i) & 0xff for i in (24, 16, 8, 0)]
+
+    # Calculate the network address and broadcast address
+    net_addr = [ip_parts[i] & mask_parts[i] for i in range(4)]
+    bcast_addr = [(net_addr[i] | ~mask_parts[i]) & 0xff for i in range(4)]
+
+    # Generate the list of IP addresses in the subnet
+    ip_list = []
+    for i in range(net_addr[3] + 1, bcast_addr[3]):
+        ip = '{}.{}.{}.{}'.format(net_addr[0], net_addr[1], net_addr[2], i)
+        ip_list.append(ip)
+
+    return ip_list

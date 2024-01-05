@@ -51,4 +51,10 @@ target_list = list()
 match targeting_type:
     case TargetingType.RANGE:
         target_list = get_range_ip_list(target_input)
+    case TargetingType.MULTIPLE:
+        target_list = get_multiple_ip_list(target_input)
+    case TargetingType.SUBNET:
+        target_list = get_subnet_ip_list(target_input)
+    case TargetingType.SINGLE:
+        target_list.append(target_input)
 
