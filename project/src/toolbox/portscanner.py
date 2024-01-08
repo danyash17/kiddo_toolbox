@@ -13,6 +13,7 @@ from toolbox.print.banner import *
 from toolbox.print.clprinter import *
 from toolbox.util.iputils import *
 from toolbox.util.portutils import *
+from toolbox.scan.scanner import *
 from enum import Enum
 
 '''
@@ -61,6 +62,17 @@ def define_porting_type(port_input):
     else:
         return PortScanType.SINGLE
 
+def exec_syn_scan(target_list, port_list):
+    print("STARTING SCANNING IN STEALTH MODE (TCP SYN)")
+    for target in target_list:
+        if not is_host_up(target):
+            print_hose_is_down(target)
+            continue
+        print_scan_target(target)
+        for port in port_list:
+            if is_port_opened_syn(target, port):
+                print_detected_opened_port(target, port)
+
 targeting_type = define_targeting_type(target_input)
 target_list = list()
 match targeting_type:
@@ -90,3 +102,8 @@ match porting_type:
         port_list.append(port_input.strip())
 print_horizontal_delimiter()
 print_radar()
+try:
+    exec_syn_scan(target_list, port_list)
+except PermissionError as pe:
+    if pe.errno == 1:
+        print("\n Root privileges are needed for raw sockets, please re-run as root\n")

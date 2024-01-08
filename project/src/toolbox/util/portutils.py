@@ -3,4 +3,4 @@ def get_multiple_ports_list(port_input):
 
 def get_range_ports_list(port_input):
     from_port, to_port = port_input.strip().split('-')
-    return list(range(from_port, to_port + 1))
+    return list(range(int(from_port), int(to_port) + 1))
