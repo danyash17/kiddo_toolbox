@@ -3,6 +3,7 @@ import os
 import socket
 
 from importmonkey import add_path
+
 ''' Export python module path '''
 
 _i = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,23 +27,27 @@ print_horizontal_delimiter()
 print_banner(tool_name)
 print_horizontal_delimiter()
 
+
 class TargetingType(Enum):
     SINGLE = 0,
     MULTIPLE = 1,
     RANGE = 2,
     SUBNET = 3
 
+
 class PortScanType(Enum):
     SINGLE = 0,
     MULTIPLE = 1,
     RANGE = 2
 
+
 target_input = input("# Step 1: Specify a target IP\n"
-                "# ex.:\n"
-                "# 192.168.0.1 - single target\n"
-                "# 192.168.0.1, 192.168.0.2 - multiple targets\n"
-                "# 192.168.0.1-192.168.0.4 - range\n"
-                "# 192.168.0.1/24 - subnet\n")
+                     "# ex.:\n"
+                     "# 192.168.0.1 - single target\n"
+                     "# 192.168.0.1, 192.168.0.2 - multiple targets\n"
+                     "# 192.168.0.1-192.168.0.4 - range\n"
+                     "# 192.168.0.1/24 - subnet\n")
+
 
 def define_targeting_type(target_input):
     if ',' in target_input:
@@ -54,6 +59,7 @@ def define_targeting_type(target_input):
     else:
         return TargetingType.SINGLE
 
+
 def define_porting_type(port_input):
     if ',' in port_input:
         return PortScanType.MULTIPLE
@@ -61,6 +67,7 @@ def define_porting_type(port_input):
         return PortScanType.RANGE
     else:
         return PortScanType.SINGLE
+
 
 def exec_syn_scan(target_list, port_list):
     print("STARTING SCANNING IN STEALTH MODE (TCP SYN)")
@@ -72,6 +79,7 @@ def exec_syn_scan(target_list, port_list):
         for port in port_list:
             if is_port_opened_syn(target, port):
                 print_detected_opened_port(target, port)
+
 
 targeting_type = define_targeting_type(target_input)
 target_list = list()
@@ -87,10 +95,10 @@ match targeting_type:
 
 print_horizontal_delimiter()
 port_input = input("# Step 2: Specify ports to be scanned\n"
-                "# ex.:\n"
-                "# 80 - single target\n"
-                "# 80, 53 - multiple targets\n"
-                "# 53-80 - range\n")
+                   "# ex.:\n"
+                   "# 80 - single target\n"
+                   "# 80, 53 - multiple targets\n"
+                   "# 53-80 - range\n")
 porting_type = define_porting_type(port_input)
 port_list = list()
 match porting_type:

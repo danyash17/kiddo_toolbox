@@ -18,10 +18,10 @@ def is_port_opened_syn(ip, port):
     '''
         Check if port is opened using stealth scan technique (SYN)
     '''
-    tcpRequest = IP(dst=ip) / TCP(dport=port, flags="S")
-    tcpResponse = sr1(tcpRequest, timeout=1, verbose=0)
+    tcp_request = IP(dst=ip) / TCP(dport=port, flags="S")
+    tcp_response = sr1(tcp_request, timeout=1, verbose=0)
     try:
-        if tcpResponse.getlayer(TCP).flags == "SA":
+        if tcp_response.getlayer(TCP).flags == "SA":
             return True
     except AttributeError:
         return False

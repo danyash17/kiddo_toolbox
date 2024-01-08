@@ -86,6 +86,7 @@ def get_multiple_ip_list(str_multiple):
     '''
     return str_multiple.strip().split(',')
 
+
 def get_subnet_ip_list(str_subnet):
     '''
        Get IP list from subnet string representation (ex. "192.168.0.1/24" ->
