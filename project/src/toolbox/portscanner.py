@@ -115,3 +115,6 @@ try:
 except PermissionError as pe:
     if pe.errno == 1:
         print("\n Root privileges are needed for raw sockets, please re-run as root\n")
+print_horizontal_delimiter()
+print("Step 3: ???")
+print("Step 4: PROFIT!")
