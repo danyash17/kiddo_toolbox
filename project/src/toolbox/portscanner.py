@@ -1,5 +1,6 @@
 import sys
 import os
+import socket
 
 from importmonkey import add_path
 ''' Export python module path '''
@@ -11,6 +12,7 @@ if _i not in sys.path:
 from toolbox.print.banner import *
 from toolbox.print.clprinter import *
 from toolbox.util.iputils import *
+from toolbox.util.portutils import *
 from enum import Enum
 
 '''
@@ -29,6 +31,11 @@ class TargetingType(Enum):
     RANGE = 2,
     SUBNET = 3
 
+class PortScanType(Enum):
+    SINGLE = 0,
+    MULTIPLE = 1,
+    RANGE = 2
+
 target_input = input("# Step 1: Specify a target IP\n"
                 "# ex.:\n"
                 "# 192.168.0.1 - single target\n"
@@ -46,6 +53,14 @@ def define_targeting_type(target_input):
     else:
         return TargetingType.SINGLE
 
+def define_porting_type(port_input):
+    if ',' in port_input:
+        return PortScanType.MULTIPLE
+    if '-' in port_input:
+        return PortScanType.RANGE
+    else:
+        return PortScanType.SINGLE
+
 targeting_type = define_targeting_type(target_input)
 target_list = list()
 match targeting_type:
@@ -56,5 +71,22 @@ match targeting_type:
     case TargetingType.SUBNET:
         target_list = get_subnet_ip_list(target_input)
     case TargetingType.SINGLE:
-        target_list.append(target_input)
+        target_list.append(target_input.strip())
 
+print_horizontal_delimiter()
+port_input = input("# Step 2: Specify ports to be scanned\n"
+                "# ex.:\n"
+                "# 80 - single target\n"
+                "# 80, 53 - multiple targets\n"
+                "# 53-80 - range\n")
+porting_type = define_porting_type(port_input)
+port_list = list()
+match porting_type:
+    case PortScanType.RANGE:
+        port_list = get_range_ports_list(port_input)
+    case PortScanType.MULTIPLE:
+        port_list = get_multiple_ports_list(port_input)
+    case PortScanType.SINGLE:
+        port_list.append(port_input.strip())
+print_horizontal_delimiter()
+print_radar()
