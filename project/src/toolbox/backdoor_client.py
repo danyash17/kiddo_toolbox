@@ -12,6 +12,13 @@ interfaces = get_interfaces_ipv4_dict()
 
 interface = input("# Step 1: Specify network interface to use\n"
                      f"# all interfaces: {interfaces}\n"
-                     "# ex. \'wlan0\'\n")
+                     "# ex. wlan0\n")
 LHOST = interfaces.get(interface)
 print(f"[i] LHOST is set to {LHOST}")
+LPORT = input("# Step 2: Specify listener port\n"
+                     "# ex. 4444\n")
+print(f"[i] LPORT is set to {LPORT}")
+s.bind((LHOST, int(LPORT)))
+MAX_SESSIONS = 5
+if input(f"[?] Leave default number of socket parallel sessions of {MAX_SESSIONS}? (y/n)\n") == 'n':
+    MAX_SESSIONS = input("# Specify number of socket parallel sessions\n")
