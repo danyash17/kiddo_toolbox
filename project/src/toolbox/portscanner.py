@@ -24,7 +24,7 @@ from enum import Enum
 tool_name = "KIDDO TOOLBOX PORTSCANNER"
 
 print_horizontal_delimiter()
-print_banner(tool_name)
+print_portscanner_banner()
 print_horizontal_delimiter()
 
 
