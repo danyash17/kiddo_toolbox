@@ -1,4 +1,5 @@
 import socket
+import json
 from toolbox.util.iputils import *
 
 from toolbox.print.banner import *
@@ -10,11 +11,18 @@ print_horizontal_delimiter()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 interfaces = get_interfaces_ipv4_dict()
 
-def reliable_send(command):
-    pass
+def reliable_send(command, target):
+    jsondata = json.dumps(command)
+    target.send(jsondata.encode())
 
-def reliable_receive():
-    pass
+def reliable_receive(target):
+    data = ""
+    while(True):
+        try:
+            data += target.recv(1024).decode().rstrip()
+            return json.loads(data)
+        except:
+            continue
 
 def communicate(ip):
     while(True):
