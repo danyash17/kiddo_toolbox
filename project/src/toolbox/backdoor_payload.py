@@ -4,8 +4,8 @@ import time
 import json
 import subprocess
 
-IP = "192.168.0.100"
-PORT = 5555
+IP = None
+PORT = None
 def connect(s):
     while(True):
         time.sleep(10)
