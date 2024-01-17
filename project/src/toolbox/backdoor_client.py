@@ -1,6 +1,5 @@
 import sys
 import os
-import socket
 
 from importmonkey import add_path
 
@@ -46,6 +45,8 @@ def communicate(target, ip):
         reliable_send(command, target)
         if command == "exit":
             quit()
+        if command[:3] == "cd ":
+            pass
         else:
             result = reliable_receive(target)
             print(result)

