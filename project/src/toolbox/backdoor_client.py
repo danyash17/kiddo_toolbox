@@ -1,4 +1,5 @@
 import socket
+from toolbox.util.iputils import *
 
 from toolbox.print.banner import *
 from toolbox.print.clprinter import *
@@ -7,3 +8,10 @@ print_horizontal_delimiter()
 print_backdoor_banner()
 print_horizontal_delimiter()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+interfaces = get_interfaces_ipv4_dict()
+
+interface = input("# Step 1: Specify network interface to use\n"
+                     f"# all interfaces: {interfaces}\n"
+                     "# ex. \'wlan0\'\n")
+LHOST = interfaces.get(interface)
+print(f"[i] LHOST is set to {LHOST}")

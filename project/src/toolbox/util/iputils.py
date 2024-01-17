@@ -1,4 +1,5 @@
-import numpy as np
+import psutil
+import socket
 
 OCT_MIN = 0
 OCT_MAX = 255
@@ -112,3 +113,9 @@ def get_subnet_ip_list(str_subnet):
         ip_list.append(ip)
 
     return ip_list
+
+def get_interfaces_ipv4_dict():
+    interfaces = psutil.net_if_addrs()
+    return {interface: next(
+        (addr.address for addr in interfaces[interface] if addr.family == socket.AF_INET and addr.address), None) for
+            interface in interfaces}
