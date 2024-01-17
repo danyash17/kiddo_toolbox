@@ -22,3 +22,7 @@ s.bind((LHOST, int(LPORT)))
 MAX_SESSIONS = 5
 if input(f"[?] Leave default number of socket parallel sessions of {MAX_SESSIONS}? (y/n)\n") == 'n':
     MAX_SESSIONS = input("# Specify number of socket parallel sessions\n")
+s.listen(MAX_SESSIONS)
+print("# Listening for incoming connections...")
+while(True):
+    target, ip = s.accept()
