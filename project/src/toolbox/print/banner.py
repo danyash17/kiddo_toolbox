@@ -9,6 +9,9 @@ def print_portscanner_banner():
 def print_backdoor_banner():
     do_print("/backdoor_banner.txt")
 
+def print_cmok_banner():
+    do_print("/cmok_banner.txt")
+
 def do_print(banner_path, trollface_path = "/trollface.txt"):
     with open(str(f"{os.path.dirname(os.path.abspath(__file__))}{banner_path}"), mode="r") as banner:
         print(banner.read())
