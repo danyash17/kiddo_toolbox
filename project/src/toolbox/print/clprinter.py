@@ -15,6 +15,10 @@ def print_cmok():
     with open(str(f"{os.path.dirname(os.path.abspath(__file__))}/cmok.txt"), mode="r") as cmok:
         print(cmok.read())
 
+def print_gorynich():
+    with open(str(f"{os.path.dirname(os.path.abspath(__file__))}/gorynich.txt"), mode="r") as gorynich:
+        print(gorynich.read())
+
 
 def print_hose_is_down(target):
     print(f"# Host {target} is down, aborting")

