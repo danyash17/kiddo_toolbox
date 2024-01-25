@@ -1,6 +1,7 @@
 import sys
 import os
 import requests
+import time
 from bs4 import BeautifulSoup
 
 from termcolor import colored
@@ -119,7 +120,10 @@ def run_cmok():
         else:
             passwd_list = read_file_as_list("/wordlists/passwords.txt")
         action, method, inputs = form
+        start_time = time.time()
         res_un, res_pass = bruteforce_username(username, passwd_list, url, method, inputs, cookies, fail_label)
+        elapsed_time = time.time() - start_time
+        print(f"# Bruteforce took {elapsed_time} seconds")
         if res_un and res_pass:
             print(f"# Successful bruteforce, found valid credentials Username "
                   + colored(res_un, "green") + " - Password " + colored(res_pass, "green"))
@@ -154,8 +158,11 @@ def run_gorinych():
         else:
             passwd_list = read_file_as_list("/wordlists/passwords.txt")
         action, method, inputs = form
+        start_time = time.time()
         res_un, res_pass = bruteforce_usernames(usrnms_list, passwd_list, url, method, inputs, cookies, fail_label) or (
             None, None)
+        elapsed_time = time.time() - start_time
+        print(f"# Bruteforce took {elapsed_time} seconds")
         if res_un and res_pass:
             print(f"# Successful bruteforce, found valid credentials Username "
                   + colored(res_un, "green") + " - Password " + colored(res_pass, "green"))
