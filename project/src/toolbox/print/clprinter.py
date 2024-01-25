@@ -11,6 +11,10 @@ def print_radar():
     with open(str(f"{os.path.dirname(os.path.abspath(__file__))}/radar.txt"), mode="r") as radar:
         print(radar.read())
 
+def print_cmok():
+    with open(str(f"{os.path.dirname(os.path.abspath(__file__))}/cmok.txt"), mode="r") as cmok:
+        print(cmok.read())
+
 
 def print_hose_is_down(target):
     print(f"# Host {target} is down, aborting")
