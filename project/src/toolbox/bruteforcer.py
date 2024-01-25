@@ -90,22 +90,27 @@ def collect_input_parameters(skip_username=False):
     fail_label = input("# Step 4: Type in a label or its part that appears when a login is failed\n"
                        "# ex. Login attempt is unsuccessful, please try again\n")
     form = find_authentication_form(url, cookies)
+    rockyou = input("# EXTRA: Do you want to use " + colored("rockyou", "magenta") + " wordlist instead of a normal one?\n"
+                    "# WARNING! Using " + colored("rockyou", "magenta") + " will lead to a very long program run time!!\n")
     if not skip_username:
         username = input("# Step 5: Type username to attack\n")
-        return username, url, cookies, fail_label, form
-    return url, cookies, fail_label, form
+        return username, url, cookies, fail_label, form, rockyou
+    return url, cookies, fail_label, form, rockyou
 
 
 def run_cmok():
     print_horizontal_delimiter()
     print_cmok_banner()
     print_horizontal_delimiter()
-    username, url, cookies, fail_label, form = collect_input_parameters(skip_username=False)
+    username, url, cookies, fail_label, form, rockyou = collect_input_parameters(skip_username=False)
     if form:
         print("# Starting CMOK attack!\n"
               "# Using @wpxmlrpcbrute enhanced common password wordlist\n")
         print_cmok()
-        passwd_list = read_file_as_list("/wordlists/passwords.txt")
+        if rockyou:
+            passwd_list = read_file_as_list("/wordlists/rockyou.txt")
+        else:
+            passwd_list = read_file_as_list("/wordlists/passwords.txt")
         action, method, inputs = form
         res_un, res_pass = bruteforce_username(username, passwd_list, url, method, inputs, cookies, fail_label)
         if res_un and res_pass:
@@ -128,14 +133,17 @@ def run_gorinych():
     print_horizontal_delimiter()
     print_gorynich_banner()
     print_horizontal_delimiter()
-    url, cookies, fail_label, form = collect_input_parameters(skip_username=True)
+    url, cookies, fail_label, form, rockyou = collect_input_parameters(skip_username=True)
     if form:
         print("# Starting GORYNICH attack!\n"
               "# Using @wpxmlrpcbrute enhanced common password wordlist\n"
               "# Using @jeanphorn common username wordlist\n")
         print_gorynich()
         usrnms_list = read_file_as_list("/wordlists/usernames.txt")
-        passwd_list = read_file_as_list("/wordlists/passwords.txt")
+        if rockyou:
+            passwd_list = read_file_as_list("/wordlists/rockyou.txt")
+        else:
+            passwd_list = read_file_as_list("/wordlists/passwords.txt")
         action, method, inputs = form
         res_un, res_pass = bruteforce_usernames(usrnms_list, passwd_list, url, method, inputs, cookies, fail_label) or (None, None)
         if res_un and res_pass:
