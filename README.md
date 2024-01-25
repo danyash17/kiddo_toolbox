@@ -52,7 +52,7 @@ More difficult to set up. First, clone a repo.
   cd kiddo_toolbox/project/src/toolbox/
 ```
 
-After that, it's crucial to configure your **host ip** and **listening port** in payload. Do not mess up - IP must be of type **string** and PORT of type **int**.
+After that, it's crucial to configure your **host ip** and **listening port** in payload. Do not mess up - IP must be of type **string** and PORT of type **int**. I used Linux *nano* command down here, if you don't know what is it, just open **backdoor_payload.py** file in a notepad and write your **host ip** and **listening port** inside " " symbols, as in the example below.
 
 ```bash
   nano backdoor_payload.py
