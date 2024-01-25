@@ -15,8 +15,10 @@ By downloading and using the tools provided in this repository, you agree to use
 
 - Portscanner
 - Backdoor
+- Cmok
+- Gorynich (concurrency incoming...)
 
-## Demo
+## About and Demo
 
 - Portscanner
   
@@ -29,6 +31,18 @@ Select the single/multiple/range/subnet of targets, specify ports you're interes
 Ever wanted to become a master of puppets? It's simple - just trick your target to execute a backdoor and gain a remote access to target machine!
 
 ![backdoor demo](project/demo/backdoor-demo.gif)
+
+- Cmok
+
+Let's assume you want to gain access to some specific account in a web application and you know username of that account. Then unpack Cmok and bruteforce a password! P.S. Cmok is a mystical dragon-like creature in my native country.
+
+![cmok demo](project/demo/cmok-demo.gif)
+
+- Gorynich
+
+So, another situation. You're interested to get into some web application.. but you don't know a thing. Not a single username or password. No worries - Gorynich is powerful enough to bruteforce pairs of correct credentials! If you're adventurous enough, you could try and use **rockyou** password wordlist to try nearly every password ever appeared in web. P.S. Gorynich is also a draconic creature like Cmok, but he has more than one head!
+
+![gorynich demo](project/demo/gorynich-demo.gif)
 
 
 ## Installation
@@ -75,3 +89,13 @@ You see *shell* label in your console? Victory! You now have full access to a te
 ```
 
 Feel free to explore it by yourself!
+
+- Cmok and Gorynich
+  
+Again, nothing difficult - just clone and run. Pay attention to your inputs and rewatch demo carefully in case of any issues.
+
+```bash
+  git clone https://github.com/danyash17/kiddo_toolbox.git
+  cd kiddo_toolbox/project/src/toolbox/
+  python3 bruteforcer.py
+```
